@@ -83,6 +83,20 @@ const run = async () => {
       res.send(result);
     });
 
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          salesStatus: data.salesStatus,
+        },
+      };
+      const result = await products.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    });
+
     app.post("/advertises", async (req, res) => {
       const data = req.body;
       // await advertises.insertOne(data);
@@ -131,8 +145,17 @@ const run = async () => {
 
     app.post("/orders", async (req, res) => {
       const data = req.body;
-      const query = {};
-      const resullt = await orders.insertOne(query);
+      const query = {
+        buyerName: data.buyerName,
+        buyerEmail: data.buyerEmail,
+        buyerPhone: data.buyerPhone,
+        meetLocation: data.meetLocation,
+        productName: data.productName,
+        price: data.price,
+        productId: data.productId,
+        productCategory: data.productCategory,
+      };
+      const result = await orders.insertOne(query);
       res.send(result);
     });
   } catch (err) {
