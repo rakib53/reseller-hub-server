@@ -97,12 +97,11 @@ const run = async () => {
       res.send(result);
     });
 
-    app.post("/advertises", async (req, res) => {
-      const data = req.body;
-      // await advertises.insertOne(data);
-      // res.send(data);
-      console.log(data);
-    });
+    // app.post("/advertises", async (req, res) => {
+    //   const data = req.body;
+    //   await advertises.insertOne(data);
+    //   res.send(data);
+    // });
 
     app.post("/users", async (req, res) => {
       const data = req.body;
@@ -143,6 +142,20 @@ const run = async () => {
       res.send(result);
     });
 
+    app.patch("/users/verify/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          isVerified: data.isVerified,
+        },
+      };
+      const result = await userList.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    });
+
     app.post("/orders", async (req, res) => {
       const data = req.body;
       const query = {
@@ -154,8 +167,22 @@ const run = async () => {
         price: data.price,
         productId: data.productId,
         productCategory: data.productCategory,
+        productImage: data.productImage,
       };
       const result = await orders.insertOne(query);
+      res.send(result);
+    });
+
+    app.get("/orders", async (req, res) => {
+      const buyerEmail = req.query?.email;
+      let newQuery = {};
+      if (req.query?.email) {
+        newQuery = {
+          buyerEmail: buyerEmail,
+        };
+      }
+      const ordersData = orders.find(newQuery);
+      const result = await ordersData.toArray();
       res.send(result);
     });
   } catch (err) {
