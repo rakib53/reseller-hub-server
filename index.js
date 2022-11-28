@@ -204,7 +204,6 @@ const run = async () => {
 
     // advertise get
     app.get("/advertises", async (req, res) => {
-      const query = {};
       const result = await advertises.find({}).toArray();
       res.send(result);
     });
