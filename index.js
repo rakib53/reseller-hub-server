@@ -203,4 +203,8 @@ run().catch((err) => {
   console.log(err.message);
 });
 
+app.get("/", (req, res) => {
+  res.send("this is an resellerhub api");
+});
+
 app.listen(port);
