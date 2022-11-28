@@ -83,6 +83,19 @@ const run = async () => {
       res.send(result);
     });
 
+    app.patch("/products/verified", async (req, res) => {
+      const sellerEmail = req.body;
+      const filter = { sellerEmail: sellerEmail.email };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          sellerVerfied: true,
+        },
+      };
+      const productsData = products.updateMany(filter, updatedDoc, options);
+      res.send(productsData);
+    });
+
     app.put("/products/:id", async (req, res) => {
       const id = req.params.id;
       const data = req.body;
@@ -97,19 +110,15 @@ const run = async () => {
       res.send(result);
     });
 
-    // app.post("/advertises", async (req, res) => {
-    //   const data = req.body;
-    //   await advertises.insertOne(data);
-    //   res.send(data);
-    // });
-
     app.post("/users", async (req, res) => {
       const data = req.body;
       const query = {
         displayName: data.displayName,
         email: data.email,
+        password: data.password,
         photoURL: data.photoURL,
         accountType: data.accountType,
+        isVerified: data.isVerified,
       };
       await userList.insertOne(query);
       res.send(data);
