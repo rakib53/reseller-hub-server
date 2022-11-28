@@ -194,6 +194,20 @@ const run = async () => {
       const result = await ordersData.toArray();
       res.send(result);
     });
+
+    // advertise post
+    app.post("/advertises", async (req, res) => {
+      const addvertise = req.body;
+      const result = await advertises.insertOne(addvertise);
+      res.send(result);
+    });
+
+    // advertise get
+    app.get("/advertises", async (req, res) => {
+      const query = {};
+      const result = await advertises.find(query).toArray();
+      res.send(result);
+    });
   } catch (err) {
     console.log(err);
   }
